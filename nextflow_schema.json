@@ -113,7 +113,7 @@
             },
             "description": "all the trim option are listed below"
         },
-        "bbnorm_options": {
+        "bbduk_options": {
             "title": "Filtering options",
             "type": "object",
             "description": "",
@@ -222,7 +222,8 @@
                 "save_samtools": {
                     "type": "boolean",
                     "description": "Save the output from samtools",
-                    "fa_icon": "fas fa-download"
+                    "fa_icon": "fas fa-download",
+                    "default": true
                 },
                 "bbmap_minid": {
                     "type": "number",
@@ -546,7 +547,7 @@
             "$ref": "#/$defs/trimming_options"
         },
         {
-            "$ref": "#/$defs/bbnorm_options"
+            "$ref": "#/$defs/bbduk_options"
         },
         {
             "$ref": "#/$defs/digital_normalization_options"
