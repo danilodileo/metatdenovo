@@ -1,11 +1,15 @@
 .DS_Store
 bbmap/bbduk/*.fastq.gz
+bbmap/bbnorm/logs/all_samples.bbnorm.log
 bbmap/logs/*.log
 fastqc/*_fastqc.{html,zip}
 featurecounts/*.{tsv,tsv.summary}
 hmmer/hits/*.faa.gz
 megahit/megahit_out/megahit_assembly.{contigs.fa.gz,log}
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
+multiqc/multiqc_data/BETA-multiqc.parquet
+multiqc/multiqc_data/llms-full.txt
+multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_data.json
 multiqc/multiqc_data/BETA-multiqc.parquet
 multiqc/multiqc_data/bbduk*.txt
