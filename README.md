@@ -35,24 +35,25 @@ On release, automated continuous integration tests run the pipeline on a full-si
 5. Optional: Normalize the sequencing depth with [`BBnorm`](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/bb-tools-user-guide/bbnorm-guide/)
 6. Merge trimmed, pair-end reads ([`Seqtk`](https://github.com/lh3/seqtk))
 7. Choice of de novo assembly programs:
-   1. [`RNAspades`](https://cab.spbu.ru/software/rnaspades/) suggested for Eukaryote de novo assembly
-   2. [`Megahit`](https://github.com/voutcn/megahit) suggested for Prokaryote de novo assembly
+   1. [`RNAspades`](https://cab.spbu.ru/software/rnaspades/) suggested for both prokaryote and eukaryote assembly
+   2. [`Megahit`](https://github.com/voutcn/megahit) suggested for both prokaryote and eukaryote assembly; requires less resources
 8. Choice of orf caller:
-   1. [`TransDecoder`](https://github.com/TransDecoder/TransDecoder) suggested for Eukaryotes
-   2. [`Prokka`](https://github.com/tseemann/prokka) suggested for Prokaryotes
-   3. [`Prodigal`](https://github.com/hyattpd/Prodigal) suggested for Prokaryotes
+   1. [`TransDecoder`](https://github.com/TransDecoder/TransDecoder) suggested for eukaryotes; only ORFs
+   2. [`Prokka`](https://github.com/tseemann/prokka) suggested for prokaryotes; ORFs and other features plus functional annotation
+   3. [`Prodigal`](https://github.com/hyattpd/Prodigal) suggested for Prokaryotes; only ORFs
 9. Quantification of genes identified in assemblies:
    1. Generate index of assembly ([`BBmap index`](https://sourceforge.net/projects/bbmap/))
    2. Mapping cleaned reads to the assembly for quantification ([`BBmap`](https://sourceforge.net/projects/bbmap/))
    3. Get raw counts per each gene present in the assembly ([`Featurecounts`](http://subread.sourceforge.net)) -> TSV table with collected featurecounts output
 10. Functional annotation:
-    1. [`Eggnog`](https://github.com/eggnogdb/eggnog-mapper) -> Reformat TSV output "eggnog table"
-    2. [`KOfamscan`](https://github.com/takaram/kofam_scan)
-    3. [`HMMERsearch`](https://www.ebi.ac.uk/Tools/hmmer/search/hmmsearch) -> Ranking orfs based on HMMprofile with [`Hmmrank`](https://github.com/erikrikarddaniel/hmmrank)
+    1. [`Prokka`](https://github.com/tseemann/prokka) feature identification and annotation for prokaryotes
+    2. [`eggNOG-mapper`](https://github.com/eggnogdb/eggnog-mapper)
+    3. [`KofamScan`](https://github.com/takaram/kofam_scan)
+    4. [`HMMER`](https://www.ebi.ac.uk/Tools/hmmer/search/hmmsearch) search ORFs with a set of HMM profiles, and rank results
 11. Taxonomic annotation:
-    1. [`EUKulele`](https://github.com/AlexanderLabWHOI/EUKulele) -> Reformat TSV output "Reformat_tax.R"
-    2. [`CAT`](https://github.com/dutilh/CAT)
-12. Summary statistics table. "Collect_stats.R"
+    1. [`EUKulele`](https://github.com/AlexanderLabWHOI/EUKulele)
+    2. [`Diamond`](https://github.com/bbuchfink/diamond)
+12. Summary statistics.
 
 ## Usage
 
@@ -64,12 +65,11 @@ First, prepare a samplesheet with your input data that looks as follows:
 `samplesheet.csv`:
 
 ```
-| sample   | fastq_1                   | fastq_2
-| -------- | ------------------------- | ------------------------- |
-| sample1  | ./data/S1_R1_001.fastq.gz | ./data/S1_R2_001.fastq.gz |
-| sample2  | ./data/S2_fw.fastq.gz     | ./data/S2_rv.fastq.gz     |
-| sample3  | ./S4x.fastq.gz            | ./S4y.fastq.gz            |
-| sample4  | ./a.fastq.gz              | ./b.fastq.gz              |
+sample,fastq_1,fastq_2
+sample1,./data/S1_R1_001.fastq.gz,./data/S1_R2_001.fastq.gz |
+sample2,./data/S2_fw.fastq.gz,./data/S2_rv.fastq.gz     |
+sample3,./S4x.fastq.gz,./S4y.fastq.gz            |
+sample4,./a.fastq.gz,./b.fastq.gz              |
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired-end).
