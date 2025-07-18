@@ -96,7 +96,8 @@ For more details about the output files and reports, please refer to the
 [output documentation](https://nf-co.re/metatdenovo/output).
 
 > [!NOTE]
-> Tables in `summary_tables` directory under the output directory are made especially for further analysis in tools like R or Python.
+> Tables in the `summary_tables` directory under the output directory are made especially for further analysis in tools like R or Python.
+> Their formats are standardized and column names consistent between tables.
 
 ## Credits
 
