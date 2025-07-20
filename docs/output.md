@@ -48,6 +48,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and the results
 
 - `trimgalore/fastqc/`
   - `*_fastqc.html`: FastQC report containing quality metrics for your untrimmed raw fastq files.
+  - `*_fastqc.zip`: Zipped FastQC data.
 
 </details>
 
@@ -92,7 +93,8 @@ BBduk is built-in tool from BBmap.
 <summary>Output files</summary>
 
 - `bbmap/`
-  - `*.bbduk.log`: a text file with the results from BBduk analysis. Number of filtered reads can be seen in this log.
+  - `bbduk/*.fastq.gz`: fastq files after removal of sequences specified with `--sequence_filter`. Only saved if you set `--save_bbduk_fastq`.
+  - `bbduk/*.bbduk.log`: text files with the results from BBduk analysis. The number of filtered reads can be found here.
 
 </details>
 
@@ -106,8 +108,9 @@ BBnorm is a BBmap tool.
 <details markdown="1">
 <summary>Output files</summary>
 
-- `bbmap/bbnorm/logs/`
-  - `*.logs`: it is a log file of the bbnorm run.
+- `bbmap/bbnorm/`
+  - `all_samples.bbnorm.log`: Log file for the run.
+  - `all_samples.fastq.gz`: Sequences kept after normalization. Only saved if you set `--save_bbnorm_fastq`.
 
 </details>
 
@@ -122,22 +125,22 @@ BBnorm is a BBmap tool.
 
 - `megahit/megahit_out/`
   - `*.log`: log file of Megahit run.
-  - `megahit_assembly.contigs.fa.gz`: reference genome created by Megahit.
-  - `intermediate_contigs`: folder that contains the intermediate steps of Megahit run.
+  - `megahit_assembly.contigs.fa.gz`: contigs created by Megahit.
 
 </details>
 
 #### Spades
 
-Optionally, you can use [Spades](https://github.com/ablab/spades) to assemble reads into contigs.
+[Spades](https://github.com/ablab/spades) is another option to assemble reads into contigs.
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `spades/`
-  - `spades.assembly.gfa.gz`: gfa file output from Spades
-  - `spades.spades.log`: log file output from Spades
-  - `spades.transcripts.fa.gz`: reference genome created by Spades
+  - `spades.assembly.gfa.gz`: gfa file output from Spades.
+  - `spades.spades.log`: log file output from Spades.
+  - `spades.transcripts.fa.gz`: contigs created by Spades.
+  - `spades.yaml`: configuration file used by Spades.
 
 </details>
 
@@ -151,9 +154,11 @@ As default, [Prodigal](https://github.com/hyattpd/Prodigal) is used to identify 
 <summary>Output files</summary>
 
 - `prodigal/`
-  - `*.fna.gz`: nucleotides fasta file output
-  - `*.faa.gz`: amino acids fasta file output
-  - `*.gff.gz`: genome feature file output
+  - `*_all.txt.gz`: ORF summary
+  - `*.fna.gz`: ORFs in nucleotide format fasta file
+  - `*.faa.gz`: ORFs in amino acids format fasta file
+  - `*.gff.gz`: ORFs in genome feature file format
+  - `*_format.gff.gz`: ORFs in alternative genome feature file format
 
 </details>
 
@@ -167,24 +172,25 @@ NB: Prodigal or Prokka are recomended for prokaryotic samples
 <summary>Output files</summary>
 
 - `prokka/`
-  - `*.ffn.gz`: nucleotides fasta file output
-  - `*.faa.gz`: amino acids fasta file output
-  - `*.gff.gz`: genome feature file output
+  - `*.ffn.gz`: ORFs in nucleotide format fasta file
+  - `*.faa.gz`: ORFs in amino acids format fasta file
+  - `*.gff.gz`: all features in genome feature file format
 
 </details>
 
 #### TransDecoder
 
 Another alternative is [TransDecoder](https://github.com/sghignone/TransDecoder) to find ORFs in the assembly.
-N.B. TransDecoder is recomended for eukaryotic samples
+N.B. TransDecoder is recommended for eukaryotic samples
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `transdecoder/`
-  - `*.cds`: nucleotides fasta file output
-  - `*.pep`: amino acids fasta file output
-  - `*.gff3`: genome feature file output
+  - `*.bed.gz`: ORFs in bed format
+  - `*.cds.gz`: ORFs in nucleotide format fasta file
+  - `*.pep.gz`: ORFs in amino acid format fasta file
+  - `*.gff3.gz`: ORFs in genome feature format
 
 </details>
 
@@ -258,20 +264,12 @@ You can run [hmmsearch](https://www.ebi.ac.uk/Tools/hmmer/search/hmmsearch) on O
 <summary>Output files</summary>
 
 - `hmmer/`
-  - `*.tbl.gz`: Table output gzipped as result of Hmmsearch run.
+  - `*.tbl.gz`: results from individual HMMER runs in tabular format.
   - `hits/*.faa.gz`: Sequences of the best ranked hits to the different HMMER profiles.
 
 </details>
 
-After the search, hits for each ORF and HMM will be summarised and ranked based on scores for the hits (see also output in [summary tables](#summary-tables)).
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `hmmrank/`
-  - `*.tsv.gz`: tab separeted file with the ranked ORFs for each HMM profile.
-
-</details>
+After the search, hits for each ORF and HMM will be summarised and ranked based on scores for the hits (see output in [summary tables](#summary-tables)).
 
 ## Metatdenovo output
 
