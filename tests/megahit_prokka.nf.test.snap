@@ -95,10 +95,10 @@
             },
             [
                 "bbmap",
-                "bbmap/logs",
-                "bbmap/logs/SAMPLE1_PE.bbmap.log",
-                "bbmap/logs/SAMPLE2_PE.bbmap.log",
-                "bbmap/logs/SAMPLE3_PE_1.bbmap.log",
+                "bbmap/bbmap",
+                "bbmap/bbmap/SAMPLE1_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE2_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE3_PE_1.bbmap.log",
                 "featurecounts",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv.summary",
@@ -181,6 +181,9 @@
                 "trimgalore/fastqc/SAMPLE3_PE_1_2_val_2_fastqc.zip"
             ],
             [
+                "SAMPLE1_PE.bbmap.log:md5,2bfc606b24215a0ffe9c49937fd6c86c",
+                "SAMPLE2_PE.bbmap.log:md5,dedc4fd4694eeef5b6eff84cb0ad8db4",
+                "SAMPLE3_PE_1.bbmap.log:md5,a0a9309f3ffdcec593d2fc5041002ba7",
                 "multiqc_citations.txt:md5,d59b1beea6256a7bf5f599da543910db",
                 "versions.yml:md5,069fffe1c38bd4bbce26b40bcc449fb2"
             ],
@@ -200,6 +203,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-17T11:29:36.575045072"
+        "timestamp": "2025-07-21T12:09:26.952964006"
     }
 }

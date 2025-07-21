@@ -95,12 +95,12 @@
             },
             [
                 "bbmap",
+                "bbmap/bbmap",
+                "bbmap/bbmap/SAMPLE1_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE2_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE3_PE_1.bbmap.log",
                 "bbmap/bbnorm",
                 "bbmap/bbnorm/all_samples.bbnorm.log",
-                "bbmap/logs",
-                "bbmap/logs/SAMPLE1_PE.bbmap.log",
-                "bbmap/logs/SAMPLE2_PE.bbmap.log",
-                "bbmap/logs/SAMPLE3_PE_1.bbmap.log",
                 "featurecounts",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv.summary",
@@ -111,6 +111,10 @@
                 "hmmer",
                 "hmmer/hits",
                 "hmmer/hits/megahit.prodigal.PF03477.faa.gz",
+                "hmmer/megahit.prodigal.PF00317.tbl.gz",
+                "hmmer/megahit.prodigal.PF00848.tbl.gz",
+                "hmmer/megahit.prodigal.PF03477.tbl.gz",
+                "hmmer/megahit.prodigal.PF13597.tbl.gz",
                 "megahit",
                 "megahit/megahit_out",
                 "megahit/megahit_out/megahit_assembly.contigs.fa.gz",
@@ -175,7 +179,10 @@
                 "trimgalore/fastqc/SAMPLE3_PE_1_2_val_2_fastqc.zip"
             ],
             [
-                "all_samples.bbnorm.log:md5,716ee7ac5e742a03b5b91664440f205c",
+                "SAMPLE1_PE.bbmap.log:md5,0d7c6289e09adc445218e7e1930a05b9",
+                "SAMPLE2_PE.bbmap.log:md5,01378ed06779d045eacd68790a7d663c",
+                "SAMPLE3_PE_1.bbmap.log:md5,73bb53709ea8580360966906ebfdf17d",
+                "all_samples.bbnorm.log:md5,31b966470bb90fb88962de8323be121c",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "versions.yml:md5,069fffe1c38bd4bbce26b40bcc449fb2"
             ],
@@ -194,6 +201,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-21T10:29:53.225809178"
+        "timestamp": "2025-07-21T12:03:32.266156427"
     }
 }

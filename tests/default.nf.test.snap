@@ -99,10 +99,10 @@
                 "bbmap/bbduk/SAMPLE1_PE.bbduk.log",
                 "bbmap/bbduk/SAMPLE2_PE.bbduk.log",
                 "bbmap/bbduk/SAMPLE3_PE_1.bbduk.log",
-                "bbmap/logs",
-                "bbmap/logs/SAMPLE1_PE.bbmap.log",
-                "bbmap/logs/SAMPLE2_PE.bbmap.log",
-                "bbmap/logs/SAMPLE3_PE_1.bbmap.log",
+                "bbmap/bbmap",
+                "bbmap/bbmap/SAMPLE1_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE2_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE3_PE_1.bbmap.log",
                 "featurecounts",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv.summary",
@@ -114,6 +114,10 @@
                 "hmmer/hits",
                 "hmmer/hits/megahit.prodigal.PF00848.faa.gz",
                 "hmmer/hits/megahit.prodigal.PF03477.faa.gz",
+                "hmmer/megahit.prodigal.PF00317.tbl.gz",
+                "hmmer/megahit.prodigal.PF00848.tbl.gz",
+                "hmmer/megahit.prodigal.PF03477.tbl.gz",
+                "hmmer/megahit.prodigal.PF13597.tbl.gz",
                 "megahit",
                 "megahit/megahit_out",
                 "megahit/megahit_out/megahit_assembly.contigs.fa.gz",
@@ -198,9 +202,9 @@
                 "trimgalore/fastqc/SAMPLE3_PE_1_2_val_2_fastqc.zip"
             ],
             [
-                "SAMPLE1_PE.bbduk.log:md5,847c70edc24c0bd0835ccb79382157a5",
-                "SAMPLE2_PE.bbduk.log:md5,92feb64c34f9f5856cdd7965512bef5a",
-                "SAMPLE3_PE_1.bbduk.log:md5,3e1d44ef51d1dba2abc46be545edbc12",
+                "SAMPLE1_PE.bbmap.log:md5,e561350cd1baba64140b9966881bcb36",
+                "SAMPLE2_PE.bbmap.log:md5,d93edf38cdcbc5aa52a49320ff6beb6d",
+                "SAMPLE3_PE_1.bbmap.log:md5,08eca392a84fe4cf6e76e7294cf56aba",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "versions.yml:md5,069fffe1c38bd4bbce26b40bcc449fb2"
             ],
@@ -219,6 +223,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-21T10:32:49.815231688"
+        "timestamp": "2025-07-21T12:05:35.751933062"
     }
 }
