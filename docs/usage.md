@@ -83,7 +83,7 @@ For further documentation, see the [BBduk official website](https://jgi.doe.gov/
 ### Digital normalization
 
 Metatdenovo can perform "digital normalization" of the reads before the assembly.
-This will reduce coverage of highly abundant sequences and remove sequences that are below a threshold. 
+This will reduce coverage of highly abundant sequences and remove sequences that are below a threshold.
 This is normally used if the data set is too large to assemble but can potentially improve an assembly by reducing the coverage of very abundant sequences.
 N.B. digitally normalized reads are used only for the assembly and the full set of sequences will be used for quantification.
 To turn on digital normalization, use the `--bbnorm` parameter and, if required, adjust the `--bbnorm_target` and `--bbnorm_min` parameters.
@@ -176,7 +176,7 @@ Currently we are only supplying a single standard databases, for GTDB release R0
 This is provided in collaboration with SciLifeLab Data Center and can be downloaded from here: [GTDB (R09RS220) taxonomy database](https://figshare.scilifelab.se/articles/dataset/nf-core_metatdenovo_taxonomy/28211678), DOI: https://doi.org/10.17044/scilifelab.28211678.
 We hope to add more later.
 
-To make your own database, you will need to collect four files: a protein fasta file, the `names.dmp` and `nodes.dmp` files from an 
+To make your own database, you will need to collect four files: a protein fasta file, the `names.dmp` and `nodes.dmp` files from an
 NCBI-style taxon dump plus a mapping file in which protein accessions are translated into taxon ids.
 As an example, you can download the [NCBI NR database in fasta format](ftp://ftp.ncbi.nih.gov/blast/db/FASTA/nr.gz), the
 [taxonomy dump](ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz) and the [mapping file](ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/).
@@ -233,8 +233,8 @@ This process is a bit unstable though.
 
 ### Functional annotation options
 
-Besides the functional annotation that the gene caller Prokka gives (see above) there are two general purpose functional annotation 
-programs available in the workflow: the [eggNOG-mapper](http://eggnog-mapper.embl.de/) and 
+Besides the functional annotation that the gene caller Prokka gives (see above) there are two general purpose functional annotation
+programs available in the workflow: the [eggNOG-mapper](http://eggnog-mapper.embl.de/) and
 [KofamScan](https://github.com/takaram/kofam_scan).
 Both are suitable for both prokaryotic and eukaryotic genes and both are run by default, but can be skipped using the `--skip_eggnog` and
 `--skip_kofamscan` options respectivelly.
@@ -245,7 +245,7 @@ It is practical to let the pipeline download the files on the first run, and the
 A more targeted annotation option offered by the workflow is the possibility for the user to provide a set of
 [HMMER HMM profiles](http://eddylab.org/software/hmmer/Userguide.pdf) through the `--hmmdir dir` or `hmmfiles file0.hmm,file1.hmm,...,filen.hmm`
 parameters.
-Each HMM file will be used to search the amino acid sequences of the ORF set and the results will be summarized in a tab separated file in 
+Each HMM file will be used to search the amino acid sequences of the ORF set and the results will be summarized in a tab separated file in
 which each ORF-HMM combination will be ranked according to score and E-value.
 
 #### How to manually download the databases for functional annotation
@@ -254,7 +254,7 @@ There are some cases (e.g. offline run) where you prefer to download the databas
 
 ##### Eggnog databases
 
-For `eggnog-mapper` the easiest way is to use `download_eggnog_data.py` provided when you install eggnog-mapper locally (documentation 
+For `eggnog-mapper` the easiest way is to use `download_eggnog_data.py` provided when you install eggnog-mapper locally (documentation
 [here](https://github.com/eggnogdb/eggnog-mapper/wiki/eggNOG-mapper-v2.1.5-to-v2.1.12#user-content-Installation)).
 
 First, install eggnog-mapper:
@@ -301,7 +301,7 @@ work                # Directory containing the nextflow working files
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these 
+If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these
 in a parameter `yml` or `json` file and specify this to the pipeline with `-params-file params.yml`.
 
 > [!WARNING]

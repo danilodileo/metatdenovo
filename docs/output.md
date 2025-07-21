@@ -231,7 +231,7 @@ Quantification of CDS features with `featureCounts` from the [subread](https://s
   - `*.featureCounts.tsv.summar`: summary statistics
 - `summary_tables/`
   - `<assembly_name>.<orfcaller_name>.counts.tsv.gz`: reformatted count data
- 
+
 </details>
 
 ### Functional and taxonomical annotation
