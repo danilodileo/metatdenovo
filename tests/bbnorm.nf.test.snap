@@ -179,10 +179,7 @@
                 "trimgalore/fastqc/SAMPLE3_PE_1_2_val_2_fastqc.zip"
             ],
             [
-                "SAMPLE1_PE.bbmap.log:md5,0d7c6289e09adc445218e7e1930a05b9",
-                "SAMPLE2_PE.bbmap.log:md5,01378ed06779d045eacd68790a7d663c",
-                "SAMPLE3_PE_1.bbmap.log:md5,73bb53709ea8580360966906ebfdf17d",
-                "all_samples.bbnorm.log:md5,31b966470bb90fb88962de8323be121c",
+                "all_samples.bbnorm.log:md5,b86447589698703351ef2a8808acdccd",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "versions.yml:md5,069fffe1c38bd4bbce26b40bcc449fb2"
             ],
@@ -201,6 +198,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-21T12:03:32.266156427"
+        "timestamp": "2025-07-21T19:21:18.284204807"
     }
 }

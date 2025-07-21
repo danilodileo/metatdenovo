@@ -2,7 +2,7 @@
 bbmap/bbduk/*.fastq.gz
 bbmap/bbduk/*.bbduk.log
 bbmap/bbnorm/logs/all_samples.bbnorm.log
-bbmap/logs/*.log
+bbmap/bbmap/*.log
 fastqc/*_fastqc.{html,zip}
 featurecounts/*.{tsv,tsv.summary}
 hmmer/*.tbl.gz
