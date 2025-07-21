@@ -183,6 +183,8 @@ NB: Prodigal or Prokka are recomended for prokaryotic samples
   - `*.ffn.gz`: ORFs in nucleotide format fasta file
   - `*.faa.gz`: ORFs in amino acids format fasta file
   - `*.gff.gz`: all features in genome feature file format
+- `summary_tables/`
+  - `<assembly_name>.<orfcaller_name>.prokka-annotations.tsv.gz`: functional annotation of ORFs parsed from the `.gff.gz` file
 
 </details>
 
