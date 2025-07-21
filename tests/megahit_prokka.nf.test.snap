@@ -95,10 +95,10 @@
             },
             [
                 "bbmap",
-                "bbmap/logs",
-                "bbmap/logs/SAMPLE1_PE.bbmap.log",
-                "bbmap/logs/SAMPLE2_PE.bbmap.log",
-                "bbmap/logs/SAMPLE3_PE_1.bbmap.log",
+                "bbmap/bbmap",
+                "bbmap/bbmap/SAMPLE1_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE2_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE3_PE_1.bbmap.log",
                 "featurecounts",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv.summary",
@@ -200,6 +200,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-17T11:29:36.575045072"
+        "timestamp": "2025-07-21T18:01:22.020312052"
     }
 }

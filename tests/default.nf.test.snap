@@ -96,16 +96,13 @@
             [
                 "bbmap",
                 "bbmap/bbduk",
-                "bbmap/bbduk/SAMPLE1_PE_1.fastq.gz",
-                "bbmap/bbduk/SAMPLE1_PE_2.fastq.gz",
-                "bbmap/bbduk/SAMPLE2_PE_1.fastq.gz",
-                "bbmap/bbduk/SAMPLE2_PE_2.fastq.gz",
-                "bbmap/bbduk/SAMPLE3_PE_1_1.fastq.gz",
-                "bbmap/bbduk/SAMPLE3_PE_1_2.fastq.gz",
-                "bbmap/logs",
-                "bbmap/logs/SAMPLE1_PE.bbmap.log",
-                "bbmap/logs/SAMPLE2_PE.bbmap.log",
-                "bbmap/logs/SAMPLE3_PE_1.bbmap.log",
+                "bbmap/bbduk/SAMPLE1_PE.bbduk.log",
+                "bbmap/bbduk/SAMPLE2_PE.bbduk.log",
+                "bbmap/bbduk/SAMPLE3_PE_1.bbduk.log",
+                "bbmap/bbmap",
+                "bbmap/bbmap/SAMPLE1_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE2_PE.bbmap.log",
+                "bbmap/bbmap/SAMPLE3_PE_1.bbmap.log",
                 "featurecounts",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv",
                 "featurecounts/SAMPLE1_PE.featureCounts.tsv.summary",
@@ -117,6 +114,10 @@
                 "hmmer/hits",
                 "hmmer/hits/megahit.prodigal.PF00848.faa.gz",
                 "hmmer/hits/megahit.prodigal.PF03477.faa.gz",
+                "hmmer/megahit.prodigal.PF00317.tbl.gz",
+                "hmmer/megahit.prodigal.PF00848.tbl.gz",
+                "hmmer/megahit.prodigal.PF03477.tbl.gz",
+                "hmmer/megahit.prodigal.PF13597.tbl.gz",
                 "megahit",
                 "megahit/megahit_out",
                 "megahit/megahit_out/megahit_assembly.contigs.fa.gz",
@@ -219,6 +220,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-17T11:20:49.746741926"
+        "timestamp": "2025-07-21T17:55:07.417427545"
     }
 }

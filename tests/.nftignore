@@ -1,9 +1,11 @@
 .DS_Store
 bbmap/bbduk/*.fastq.gz
-bbmap/bbnorm/logs/all_samples.bbnorm.log
-bbmap/logs/*.log
+bbmap/bbduk/*.bbduk.log
+bbmap/bbnorm/all_samples.bbnorm.log
+bbmap/bbmap/*.log
 fastqc/*_fastqc.{html,zip}
 featurecounts/*.{tsv,tsv.summary}
+hmmer/*.tbl.gz
 hmmer/hits/*.faa.gz
 megahit/megahit_out/megahit_assembly.{contigs.fa.gz,log}
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
