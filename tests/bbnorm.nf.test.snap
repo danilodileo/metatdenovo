@@ -96,8 +96,7 @@
             [
                 "bbmap",
                 "bbmap/bbnorm",
-                "bbmap/bbnorm/logs",
-                "bbmap/bbnorm/logs/all_samples.bbnorm.log",
+                "bbmap/bbnorm/all_samples.bbnorm.log",
                 "bbmap/logs",
                 "bbmap/logs/SAMPLE1_PE.bbmap.log",
                 "bbmap/logs/SAMPLE2_PE.bbmap.log",
@@ -176,6 +175,7 @@
                 "trimgalore/fastqc/SAMPLE3_PE_1_2_val_2_fastqc.zip"
             ],
             [
+                "all_samples.bbnorm.log:md5,716ee7ac5e742a03b5b91664440f205c",
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "versions.yml:md5,069fffe1c38bd4bbce26b40bcc449fb2"
             ],
@@ -194,6 +194,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-17T14:06:15.993800304"
+        "timestamp": "2025-07-21T10:29:53.225809178"
     }
 }
