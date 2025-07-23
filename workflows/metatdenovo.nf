@@ -105,6 +105,9 @@ include { FASTQC                                     } from '../modules/nf-core/
 include { MULTIQC                                    } from '../modules/nf-core/multiqc/main'
 include { PIGZ_COMPRESS as PIGZ_ASSEMBLY             } from '../modules/nf-core/pigz/compress/main'
 include { PIGZ_COMPRESS as PIGZ_DIAMOND_LINEAGE      } from '../modules/nf-core/pigz/compress/main'
+include { PIGZ_COMPRESS as PIGZ_MULTIPLE_READS_FWD   } from '../modules/nf-core/pigz/compress/main'
+include { PIGZ_COMPRESS as PIGZ_MULTIPLE_READS_REV   } from '../modules/nf-core/pigz/compress/main'
+include { PIGZ_COMPRESS as PIGZ_SINGLE_READS         } from '../modules/nf-core/pigz/compress/main'
 include { PIGZ_COMPRESS as PIGZ_TRANSDECODER_BED     } from '../modules/nf-core/pigz/compress/main'
 include { PIGZ_COMPRESS as PIGZ_TRANSDECODER_CDS     } from '../modules/nf-core/pigz/compress/main'
 include { PIGZ_COMPRESS as PIGZ_TRANSDECODER_GFF     } from '../modules/nf-core/pigz/compress/main'
@@ -167,6 +170,75 @@ workflow METATDENOVO {
                 multiple: fastqs.size() > 1
                     return [ meta, fastqs ]
         }
+
+    //
+    // Gzip unzipped read files
+    //
+
+    // Paired end, forward
+    rev = Channel.empty()
+    ch_fastq.multiple
+        .map { meta, fastqs -> [ meta, fastqs[0] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+        .set { fwd }
+    PIGZ_MULTIPLE_READS_FWD(fwd.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_FWD.out.versions)
+
+    // Paired end, reverse
+    rev = Channel.empty()
+    ch_fastq.multiple
+        .map { meta, fastqs -> [ meta, fastqs[1] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+        .set { rev }
+    PIGZ_MULTIPLE_READS_REV(rev.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_REV.out.versions)
+
+    // Single end (DL: not properly supported by the pipeline yet, but this part works)
+    single = Channel.empty()
+    ch_fastq.single
+        .map { meta, fastqs -> [ meta, fastqs[0] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+        .set { single }
+    PIGZ_SINGLE_READS(single.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_SINGLE_READS.out.versions)
+
+    // Join the three channels with the originally zipped to form a new ch_fastq of the same structure as the original
+    fwd.zipped.concat(PIGZ_MULTIPLE_READS_FWD.out.archive)
+        .join(rev.zipped.concat(PIGZ_MULTIPLE_READS_REV.out.archive))
+        .map { meta, fwd, rev -> [ meta, [ fwd, rev ] ] }
+        .concat(
+            single.zipped
+                .concat(PIGZ_SINGLE_READS.out.archive)
+                .map { meta, fastq -> [ meta, [ fastq ] ] }
+        )
+        .branch {
+            meta, fastqs ->
+                single  : meta.single_end
+                    return [ meta, fastqs ]
+                multiple: true
+                    return [ meta, fastqs ]
+        }
+        .set { ch_fastq }
+
+    //ch_fastq.multiple.view { it -> "multiple: ${it}" }
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -643,7 +715,8 @@ workflow METATDENOVO {
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    //multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = Channel.empty()
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
