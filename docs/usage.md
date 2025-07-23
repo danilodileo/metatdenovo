@@ -27,7 +27,10 @@ nextflow run nf-core/metatdenovo -profile docker --outdir results/ --input sampl
 
 ### Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It must be a comma-separated file with 3 columns, and a header row as shown in the examples below
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline.
+Use this parameter to specify its location.
+It must be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+The input fastq files need to have names ending with `.fastq` or `.fq`, followed by `.gz` if gzipped.
 
 ```csv title="samplesheet.csv"
 sample,fastq_1,fastq_2
@@ -58,8 +61,8 @@ T24c,AEG588A6_S3_L002_R1_001.fastq.gz,AEG588A6_S3_L002_R2_001.fastq.gz
 | Column    | Description                                                                                                                                                                            |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. The file has to have the extension ".fastq" or ".fq", followed by ".gz" if gzipped.                                                |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. The file has to have the extension ".fastq" or ".fq", followed by ".gz" if gzipped.                                                |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
