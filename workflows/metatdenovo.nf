@@ -238,8 +238,6 @@ workflow METATDENOVO {
         }
         .set { ch_fastq }
 
-    //ch_fastq.multiple.view { it -> "multiple: ${it}" }
-
     //
     // MODULE: Concatenate FastQ files from same sample if required
     //
