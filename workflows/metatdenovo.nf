@@ -650,17 +650,12 @@ workflow METATDENOVO {
             .map { it -> [ [ id: "${assembly_name}.${orfs_name}" ], it ] }
     )
     MERGE_TABLES.out.merged_table
-        //.view { "merged0: ${it}" }
-        //.collect { meta, tblout -> tblout }
-        //.view { "merged1: ${it}" }
-        //.map { meta, tblout -> [ tblout ] }
-        //.view { "merged2: ${it}" }
+
     ch_collect_stats = ch_collect_stats
         .combine(
             Channel.empty()
                 .mix ( MERGE_TABLES.out.merged_table.map { meta, tblout -> [ tblout ] } )
                 .ifEmpty { [ [] ] }
-                //.map { [ it ] }
         )
     ch_versions     = ch_versions.mix(MERGE_TABLES.out.versions)
 
