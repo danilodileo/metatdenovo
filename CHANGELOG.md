@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#390](https://github.com/nf-core/metatdenovo/pull/390) - remove resource limits on full scale AWS tests to make it work (@erikrikarddaniel)
+- [#398](https://github.com/nf-core/metatdenovo/pull/398) - make sure the EUKulele database directory is create if it doesn't exist (@erikrikarddaniel)
 - [#391](https://github.com/nf-core/metatdenovo/pull/391),[#392](https://github.com/nf-core/metatdenovo/pull/392) - update the documentation and fix some inconsistencies in which output files are saved (@erikrikarddaniel)
+- [#390](https://github.com/nf-core/metatdenovo/pull/390) - remove resource limits on full scale AWS tests to make it work (@erikrikarddaniel)
 
 ### `Dependencies`
 
