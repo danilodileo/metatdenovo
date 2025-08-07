@@ -559,6 +559,12 @@ workflow METATDENOVO {
     //
     ch_eukulele_db = Channel.empty()
     if( ! params.skip_eukulele ) {
+        // Make sure the eukulele_dbpath exists
+        d = new File("${params.eukulele_dbpath}")
+        if ( ! d.exists() ) {
+            d.mkdirs()
+        }
+
         // Create a channel for EUKulele either with a named database or not. The latter means a user-provided database in a directory.
         if ( params.eukulele_db ) {
             Channel
