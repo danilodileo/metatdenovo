@@ -157,86 +157,22 @@ workflow METATDENOVO {
                 return [[ meta.id, pairs.collect { meta + [id: "${meta.id}_${pairs.indexOf(it) + 1}"] }, fastq_files ]]
             }
         }
+        /** DL: In my testing, this fails as entries come in with single meta, multiple read files when appear for single ends
         .map { id, metas, fastq_files ->
             // Ensure single_end is set correctly in meta
-            def updatedMetas = metas.collect { it + [single_end: (fastq_files.size() / metas.size() == 1)] }
+            def updatedMetas = metas
+                .collect { it + [single_end: (fastq_files.size() / metas.size() == 1)] }
             return [id, updatedMetas, fastq_files]
         }
+        **/
         .map { validateInputSamplesheet(it) }
         .branch {
             meta, fastqs ->
-                single  : fastqs.size() == 1
-                    return [ meta, fastqs ]
-                multiple: fastqs.size() > 1
-                    return [ meta, fastqs ]
-        }
-
-    //
-    // Gzip unzipped read files
-    //
-
-    // Paired end, forward
-    rev = Channel.empty()
-    ch_fastq.multiple
-        .map { meta, fastqs -> [ meta, fastqs[0] ] }
-        .branch {
-            meta, fastqs ->
-                zipped  : fastqs.name.endsWith('.gz')
-                    return [ meta, fastqs ]
-                unzipped: true
-                    return [ meta, fastqs ]
-        }
-        .set { fwd }
-    PIGZ_MULTIPLE_READS_FWD(fwd.unzipped)
-    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_FWD.out.versions)
-
-    // Paired end, reverse
-    rev = Channel.empty()
-    ch_fastq.multiple
-        .map { meta, fastqs -> [ meta, fastqs[1] ] }
-        .branch {
-            meta, fastqs ->
-                zipped  : fastqs.name.endsWith('.gz')
-                    return [ meta, fastqs ]
-                unzipped: true
-                    return [ meta, fastqs ]
-        }
-        .set { rev }
-    PIGZ_MULTIPLE_READS_REV(rev.unzipped)
-    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_REV.out.versions)
-
-    // Single end (DL: not properly supported by the pipeline yet, but this part works)
-    single = Channel.empty()
-    ch_fastq.single
-        .map { meta, fastqs -> [ meta, fastqs[0] ] }
-        .branch {
-            meta, fastqs ->
-                zipped  : fastqs.name.endsWith('.gz')
-                    return [ meta, fastqs ]
-                unzipped: true
-                    return [ meta, fastqs ]
-        }
-        .set { single }
-    PIGZ_SINGLE_READS(single.unzipped)
-    ch_versions      = ch_versions.mix(PIGZ_SINGLE_READS.out.versions)
-
-    // Join the three channels with the originally zipped to form a new ch_fastq of the same structure as the original
-    fwd.zipped.concat(PIGZ_MULTIPLE_READS_FWD.out.archive)
-        .join(rev.zipped.concat(PIGZ_MULTIPLE_READS_REV.out.archive))
-        .map { meta, fwd, rev -> [ meta, [ fwd, rev ] ] }
-        .concat(
-            single.zipped
-                .concat(PIGZ_SINGLE_READS.out.archive)
-                .map { meta, fastq -> [ meta, [ fastq ] ] }
-        )
-        .branch {
-            meta, fastqs ->
-                single  : meta.single_end
+                single  : ( meta.single_end && fastqs.size() == 1 ) || ( ! meta.single_end && fastqs.size == 2 )
                     return [ meta, fastqs ]
                 multiple: true
                     return [ meta, fastqs ]
         }
-        .set { ch_fastq }
 
     //
     // MODULE: Concatenate FastQ files from same sample if required
@@ -251,6 +187,74 @@ workflow METATDENOVO {
     ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     //
+    // Gzip unzipped read files
+    //
+
+    // Paired end, forward
+    fwd = ch_fastq.single
+        .filter { meta, f -> ! meta.single_end }
+        .map { meta, fastqs -> [ meta, fastqs[0] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+    PIGZ_MULTIPLE_READS_FWD(fwd.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_FWD.out.versions)
+
+    // Paired end, reverse
+    rev = ch_fastq.single
+        .filter { meta, f -> ! meta.single_end }
+        .map { meta, fastqs -> [ meta, fastqs[1] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+    PIGZ_MULTIPLE_READS_REV(rev.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_MULTIPLE_READS_REV.out.versions)
+
+    // Single end
+    se = ch_fastq.single
+        .filter { meta, f -> meta.single_end }
+        .map { meta, fastqs -> [ meta, fastqs[0] ] }
+        .branch {
+            meta, fastqs ->
+                zipped  : fastqs.name.endsWith('.gz')
+                    return [ meta, fastqs ]
+                unzipped: true
+                    return [ meta, fastqs ]
+        }
+    PIGZ_SINGLE_READS(se.unzipped)
+    ch_versions      = ch_versions.mix(PIGZ_SINGLE_READS.out.versions)
+
+    // Join the three channels with the originally zipped to form a new ch_fastq of the same structure as the original
+    fwd.zipped.concat(PIGZ_MULTIPLE_READS_FWD.out.archive)
+        .join(rev.zipped.concat(PIGZ_MULTIPLE_READS_REV.out.archive))
+        .map { meta, fwd, rev -> [ meta, [ fwd, rev ] ] }
+        .concat(
+            se.zipped
+                .concat(PIGZ_SINGLE_READS.out.archive)
+                .map { meta, fastq -> [ meta, [ fastq ] ] }
+        )
+        .concat(CAT_FASTQ.out.reads)
+        .view { "concatenated: $it" }
+        .branch {
+            meta, fastqs ->
+                single  : meta.single_end
+                    return [ meta, fastqs ]
+                multiple: true
+                    return [ meta, fastqs ]
+        }
+        .set { ch_fastq }
+
+    /** COMMENT
+
+    //
     // SUBWORKFLOW: Read QC and trim adapters
     //
     FASTQC_TRIMGALORE (
@@ -259,21 +263,25 @@ workflow METATDENOVO {
         params.skip_trimming
     )
     ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
-    ch_collect_stats = ch_cat_fastq.collect { meta, fasta -> meta.id }.map { [ [ id:"${assembly_name}.${orfs_name}" ], it ] }
+    FASTQC_TRIMGALORE.out.trim_log.view { "TRIMGALORE.out.trim_log: ${it}" }
+    ch_collect_stats = ch_cat_fastq
+        .collect { meta, fasta -> meta.id }
+        .map { [ [ id:"${assembly_name}.${orfs_name}" ], it ] }
+        .view { "ch_collect_stats init: ${it}" }
     if ( params.skip_trimming ) {
-        ch_collect_stats
+        ch_collect_stats = ch_collect_stats
             .map { meta, samples -> [ meta, samples, [] ] }
-            .set { ch_collect_stats }
+            .view { "ch_collect_stats post skip-trimming: ${it}" }
 
     } else {
         if ( params.se_reads ) {
-            ch_collect_stats
+            ch_collect_stats = ch_collect_stats
                 .combine(FASTQC_TRIMGALORE.out.trim_log.collect { meta, report -> report }.map { [ it ] })
-                .set { ch_collect_stats }
+                .view { "ch_collect_stats post trimming se_reads: ${it}" }
         } else {
-            ch_collect_stats
+            ch_collect_stats = ch_collect_stats
                 .combine(FASTQC_TRIMGALORE.out.trim_log.collect { meta, report -> report[0] }.map { [ it ] })
-                .set { ch_collect_stats }
+                .view { "ch_collect_stats post trimming non-se: ${it}" }
         }
     }
 
@@ -285,22 +293,21 @@ workflow METATDENOVO {
         ch_clean_reads  = BBMAP_BBDUK.out.reads
         ch_bbduk_logs = BBMAP_BBDUK.out.log.collect { meta, log ->  log }.map { [ it ] }
         ch_versions   = ch_versions.mix(BBMAP_BBDUK.out.versions.first())
-        ch_collect_stats
+        ch_collect_stats = ch_collect_stats
             .combine(ch_bbduk_logs)
-            .set {ch_collect_stats}
+            .view { "ch_collect_stats post bbduk: ${it}" }
         ch_multiqc_files = ch_multiqc_files.mix(BBMAP_BBDUK.out.log.collect{ meta, log -> log })
     } else {
         ch_clean_reads  = FASTQC_TRIMGALORE.out.reads
         ch_bbduk_logs = Channel.empty()
-        ch_collect_stats
+        ch_collect_stats = ch_collect_stats
             .map { meta, samples, report -> [ meta, samples, report, [] ] }
-            .set { ch_collect_stats }
+            .view { "ch_collect_stats post trimgalore: ${it}" }
     }
 
     //
     // MODULE: Interleave sequences for assembly
     //
-    // DL & DDL: We can probably not deal with single end input
     ch_interleaved = Channel.empty()
     if ( ! params.user_assembly ) {
         if ( params.se_reads) {
@@ -497,9 +504,9 @@ workflow METATDENOVO {
         .combine(ch_gff.map { meta, bam -> bam } )
         .set { ch_featurecounts }
 
-    ch_collect_stats
+    ch_collect_stats = ch_collect_stats
         .combine(BAM_SORT_STATS_SAMTOOLS.out.idxstats.collect { meta, idxstats -> idxstats }.map { [ it ] } )
-        .set { ch_collect_stats }
+        .view { "ch_collect_stats post bam sort: ${it}" }
 
     FEATURECOUNTS_CDS ( ch_featurecounts)
     ch_versions       = ch_versions.mix(FEATURECOUNTS_CDS.out.versions)
@@ -516,9 +523,9 @@ workflow METATDENOVO {
     ch_versions           = ch_versions.mix(COLLECT_FEATURECOUNTS.out.versions)
     ch_fcs_for_stats      = COLLECT_FEATURECOUNTS.out.counts.collect { meta, tsv -> tsv }.map { [ it ] }
     ch_fcs_for_summary    = COLLECT_FEATURECOUNTS.out.counts.map { meta, tsv -> tsv }
-    ch_collect_stats
+    ch_collect_stats = ch_collect_stats
         .combine(ch_fcs_for_stats)
-        .set { ch_collect_stats }
+        .view { "ch_collect_stats post fc: ${it}" }
 
     ch_merge_tables = Channel.empty()
     //
@@ -661,6 +668,7 @@ workflow METATDENOVO {
 
     COLLECT_STATS(ch_collect_stats)
     ch_versions     = ch_versions.mix(COLLECT_STATS.out.versions)
+    COMMENT **/
 
     //
     // Collate and save software versions
@@ -673,6 +681,7 @@ workflow METATDENOVO {
             newLine: true
         ).set { ch_collated_versions }
 
+    /** COMMENT
     //
     // MODULE: MultiQC
     //
@@ -712,9 +721,11 @@ workflow METATDENOVO {
         [],
         []
     )
+    COMMENT **/
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    // COMMENT multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = Channel.empty()
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
