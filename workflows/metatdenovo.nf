@@ -262,7 +262,7 @@ workflow METATDENOVO {
     ch_versions = ch_versions.mix(FASTQC_TRIMGALORE.out.versions)
 
     ch_collect_stats = ch_fastq
-        .collect { meta, fasta -> meta.id }
+        .collect { meta, fasta -> meta }
         .map { [ [ id:"${assembly_name}.${orfs_name}" ], it ] }
 
     if ( params.skip_trimming ) {
