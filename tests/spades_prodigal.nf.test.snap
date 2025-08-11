@@ -1,7 +1,7 @@
 {
     "-profile test_spades_prodigal": {
         "content": [
-            48,
+            46,
             {
                 "BBMAP_ALIGN": {
                     "bbmap": 39.18,
@@ -40,10 +40,10 @@
                 "FORMAT_PRODIGAL_GFF": {
                     "gzip": "1.11"
                 },
-                "PIGZ_MULTIPLE_READS_FWD": {
+                "PIGZ_PE_READS_FWD": {
                     "pigz": 2.8
                 },
-                "PIGZ_MULTIPLE_READS_REV": {
+                "PIGZ_PE_READS_REV": {
                     "pigz": 2.8
                 },
                 "PRODIGAL_MODULE": {
@@ -185,6 +185,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-07-23T20:36:19.665276774"
+        "timestamp": "2025-08-11T14:19:46.454522769"
     }
 }
