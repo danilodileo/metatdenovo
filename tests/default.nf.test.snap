@@ -219,13 +219,13 @@
             1,
             4,
             [
-                "sample\tn_trimmed\tn_non_contaminated\tidxs_n_mapped\tidxs_n_unmapped\tn_feature_count"
+                "sample\tn_post_trimming\tn_non_contaminated\tidxs_n_mapped\tidxs_n_unmapped\tn_feature_count"
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-11T14:07:30.282996266"
+        "timestamp": "2025-08-11T20:24:34.108504596"
     }
 }

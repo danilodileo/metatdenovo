@@ -196,7 +196,7 @@
             ],
             4,
             [
-                "sample\tn_trimmed\tidxs_n_mapped\tidxs_n_unmapped\tn_feature_count"
+                "sample\tn_post_trimming\tidxs_n_mapped\tidxs_n_unmapped\tn_feature_count"
             ],
             [
                 "orf\tcontig\tgene_caller\tfeature\tstart\tend\tstrand\tdb_xref\tec_number\tgene\tinference\tlocus_tag\tname\tnote\tproduct"
@@ -206,6 +206,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.6"
         },
-        "timestamp": "2025-08-11T14:12:43.703944427"
+        "timestamp": "2025-08-11T20:30:16.980724877"
     }
 }
