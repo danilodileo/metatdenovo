@@ -69,11 +69,13 @@ sample,fastq_1,fastq_2
 sample1,./data/S1_R1_001.fastq.gz,./data/S1_R2_001.fastq.gz
 sample2,./data/S2_fw.fastq.gz,./data/S2_rv.fastq.gz
 sample3,./S4x.fastq.gz,./S4y.fastq.gz
-sample4,./a.fastq.gz,./b.fastq.gz
+sample3,./a.fastq.gz,./b.fastq.gz
 ```
 
 Each row represents a fastq file (single-end) or a pair of fastq files (paired-end).
 The fastq files need to end with `.fq` or `.fastq`, followed by `.gz` if gzipped.
+Read files from multiple rows with the same sample name will be concatenated and treated as a single sample.
+A mix of single-end and paired-end files is allowed, but do not mix single-end and paired-end for the same sample name.
 
 Now, you can run the pipeline using:
 
