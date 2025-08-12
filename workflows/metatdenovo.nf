@@ -241,15 +241,6 @@ workflow METATDENOVO {
                 .map { meta, fastq -> [ meta, [ fastq ] ] }
         )
         .concat(CAT_FASTQ.out.reads)
-        /**
-        .branch {
-            meta, fastqs ->
-                single  : meta.single_end
-                    return [ meta, fastqs ]
-                multiple: true
-                    return [ meta, fastqs ]
-        }
-        **/
 
     //
     // SUBWORKFLOW: Read QC and trim adapters
@@ -645,9 +636,6 @@ workflow METATDENOVO {
 
     COLLECT_STATS(ch_collect_stats)
     ch_versions     = ch_versions.mix(COLLECT_STATS.out.versions)
-
-    /** COMMENT
-    COMMENT **/
 
     //
     // Collate and save software versions
