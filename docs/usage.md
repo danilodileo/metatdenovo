@@ -81,7 +81,7 @@ T0a,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
 
 The samplesheet may contain either paired end reads (as in the examples above), single end reads or a mixture.
 For single end reads, supply the read file in the `fastq_1` field and leave `fastq_2` empty.
-*Do not mix single end and pairs for the same sample!*
+_Do not mix single end and pairs for the same sample!_
 
 ### Filter/remove sequences from the samples (e.g. rRNA sequences with SILVA database)
 
