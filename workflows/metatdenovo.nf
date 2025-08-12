@@ -175,7 +175,7 @@ workflow METATDENOVO {
         }
 
     //
-    // MODULE: Concatenate FastQ files from same sample if required
+    // MODULE: Concatenate FastQ files from the same sample if required
     //
     CAT_FASTQ (
         ch_fastq.multiple
@@ -186,7 +186,7 @@ workflow METATDENOVO {
     // Gzip unzipped read files
     //
     // We're only doing this for samples having a single row in the sample sheet since those with more than one
-    // were gzipped by CAT_FASTQ.
+    // were gzipped by CAT_FASTQ above.
     //
 
     // Paired end, forward
