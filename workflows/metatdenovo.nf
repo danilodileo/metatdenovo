@@ -264,9 +264,9 @@ workflow METATDENOVO {
         ch_collect_stats = ch_collect_stats
             .combine(
                 FASTQC_TRIMGALORE.out.trim_log
-                    .collect { meta, report -> 
+                    .collect { meta, report ->
                         if ( report in List ) {
-                            report[0] 
+                            report[0]
                         } else {
                             report
                         }
@@ -310,7 +310,7 @@ workflow METATDENOVO {
             BBMAP_BBNORM(
                 ch_interleaved
                     .collect { meta, fastq -> fastq }
-                    .map { [ [id:'all_samples', single_end:true], it ] } 
+                    .map { [ [id:'all_samples', single_end:true], it ] }
             )
             ch_pe_reads_to_assembly = BBMAP_BBNORM.out.fastq.map { meta, fasta -> fasta }
             ch_se_reads_to_assembly = Channel.empty()
@@ -335,7 +335,7 @@ workflow METATDENOVO {
             PIGZ_ASSEMBLY(
                 Channel
                     .fromPath(params.user_assembly)
-                    .map { [ [ id:params.user_assembly ], it ] } 
+                    .map { [ [ id:params.user_assembly ], it ] }
             )
             ch_assembly_contigs = PIGZ_ASSEMBLY.out.archive.first()
         } else {
