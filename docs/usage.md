@@ -210,7 +210,12 @@ wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.FU
 gunzip -c nr.gz | sed '/^>/s/ .*//' | diamond makedb --taxonmap prot.accession2taxid.FULL.gz --taxonnames names.dmp --taxonnodes nodes.dmp --db ncbi-nr.taxonomy.dmnd
 ```
 
-We are also, in collaboration with SciLifeLab Data Center, providing a [GTDB (R09RS220) taxonomy database](https://figshare.scilifelab.se/articles/dataset/nf-core_metatdenovo_taxonomy/28211678), DOI: https://doi.org/10.17044/scilifelab.28211678.
+We are also, in collaboration with SciLifeLab Data Center, providing a [GTDB (R09RS220) taxonomy database](https://figshare.scilifelab.se/
+articles/dataset/nf-core_metatdenovo_taxonomy/28211678), DOI: https://doi.org/10.17044/scilifelab.28211678.
+_Note:_ If you can't download the files from FigShare from the command line with `wget` or `curl`, try URLs looking like
+`https://ndownloader.figshare.com/files/52095806` instead of the ones you get from the web page.
+Also note, that the files do not get the correct file names when you download from the command line.
+Use a command like `wget -O gtdb-r220.names.dmp https://ndownloader.figshare.com/files/52095806`.
 
 After creating one or more databases, you can provide them to the pipeline by filling out a file looking like the below and providing that to the pipeline
 with `--diamond_dbs diamond_dbs.csv` (see the parameter documentation).
