@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- [#402](https://github.com/nf-core/metatdenovo/pull/402) - improve documentation for download of FigShare Diamond files (@erikrikarddaniel)
 - [#402](https://github.com/nf-core/metatdenovo/pull/402) - allow the BBNorm process to only use 0.8 of the allocated memory not to fail on oversubscription of memory (@erikrikarddaniel)
 - [#400](https://github.com/nf-core/metatdenovo/pull/400) - fix problems with `COLLECT_STATS` when single end reads are used; closes [#396](https://github.com/nf-core/metatdenovo/issues/396) (@erikrikarddaniel)
 - [#398](https://github.com/nf-core/metatdenovo/pull/398) - make sure the EUKulele database directory is created if it doesn't exist (@erikrikarddaniel)
