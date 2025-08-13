@@ -211,6 +211,7 @@ gunzip -c nr.gz | sed '/^>/s/ .*//' | diamond makedb --taxonmap prot.accession2t
 ```
 
 We are also, in collaboration with SciLifeLab Data Center, providing a [GTDB (R09RS220) taxonomy database](https://figshare.scilifelab.se/articles/dataset/nf-core*metatdenovo_taxonomy/28211678), DOI: https://doi.org/10.17044/scilifelab.28211678.
+
 _Note_: If you can't download the files from FigShare from the command line with `wget` or `curl`, try URLs looking like
 `https://ndownloader.figshare.com/files/52095806` instead of the ones you get from the web page.
 Also note, that the files do not get the correct file names when you download from the command line.
