@@ -31,8 +31,7 @@
 - [RNAspade](https://cab.spbu.ru/software/rnaspades/)
 
   > Bushmanova E, Antipov D, Lapidus A, Prjibelski A, rnaSPAdes: a de novo transcriptome assembler and its application to RNA-Seq data GigaScience, 2019
-  > Prjibelski, A.,  Antipov, D.,  Meleshko, D.,  Lapidus, A., &  Korobeynikov, A. (2020).  “Using SPAdes de novo assembler.” Current Protocols in Bioinformatics,  70, e102. doi: 10.1002/cpbi.102
-
+  > Prjibelski, A., Antipov, D., Meleshko, D., Lapidus, A., & Korobeynikov, A. (2020). “Using SPAdes de novo assembler.” Current Protocols in Bioinformatics, 70, e102. doi: 10.1002/cpbi.102
 
 - [Megahit](https://github.com/voutcn/megahit)
 
