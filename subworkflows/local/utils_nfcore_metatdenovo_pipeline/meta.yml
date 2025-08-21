@@ -1,4 +1,4 @@
-name: utils_nfcore_metatdenovo_pipeline
+name: PIPELINE_INITIALISATION
 description: Subworkflow with functionality specific to the nf-core/metatdenovo pipeline
 keywords:
   - utility
@@ -10,8 +10,13 @@ keywords:
   - metatdenovo
 components:
   - utils_nfschema_plugin
-  - utils_nfcore_pipeline
+  - utils_nfcore_pipeline  
   - utils_nextflow_pipeline
+  - completionemail
+  - completionsummary
+  - imnotification
+  - paramssummarymap
+  - samplesheettolist
 workflows:
   - name: PIPELINE_INITIALISATION
     description: Initialize pipeline with parameter validation and input processing
