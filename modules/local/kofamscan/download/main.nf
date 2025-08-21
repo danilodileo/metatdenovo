@@ -27,7 +27,7 @@ process KOFAMSCAN_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        wget: \$(wget --version 2>&1 | head -n 1 | awk '{print $3}')
+        wget: \$(wget --version 2>&1 | head -n 1 | awk '{print \$3}')
     END_VERSIONS
     """
 }
