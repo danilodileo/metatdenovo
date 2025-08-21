@@ -10,7 +10,7 @@ keywords:
   - metatdenovo
 components:
   - utils_nfschema_plugin
-  - utils_nfcore_pipeline  
+  - utils_nfcore_pipeline
   - utils_nextflow_pipeline
 workflows:
   - name: PIPELINE_INITIALISATION
