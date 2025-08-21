@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#404](https://github.com/nf-core/metatdenovo/pull/404) - Added new reference for SPAdes in CHANGELOG.md (@danilodileo)
+- [#405](https://github.com/nf-core/metatdenovo/pull/405) - Upgrade EUKulele to 2.1.2. This appears to fix problems with downloads of certain databases (@erikrikarddaniel)
+- [#404](https://github.com/nf-core/metatdenovo/pull/404) - Added new reference for SPAdes in CITATIONS.md (@danilodileo)
 - [#394](https://github.com/nf-core/metatdenovo/pull/394) - allow unzipped input files (@erikrikarddaniel)
 - [#389](https://github.com/nf-core/metatdenovo/pull/389) - template update to nf-core tools 3.3.2 plus module updates (@erikrikarddaniel)
 
