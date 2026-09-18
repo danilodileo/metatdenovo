@@ -41,6 +41,7 @@ include { FASTQC_TRIMGALORE       } from '../subworkflows/local/fastqc/trimgalor
 include { PRODIGAL                } from '../subworkflows/local/prodigal/'
 include { KOFAMSCAN               } from '../subworkflows/local/kofamscan/'
 include { DBCAN                   } from '../subworkflows/local/dbcan/'
+include { INTERPROSCAN_ANNOTATION } from '../subworkflows/local/interproscan/'
 include { TRANSDECODER            } from '../subworkflows/local/transdecoder/'
 include { METAEUK                 } from '../subworkflows/local/metaeuk/'
 include { USER_ORFS               } from '../subworkflows/local/user_orfs/'
@@ -126,6 +127,7 @@ workflow METATDENOVO {
     def skip_eggnog                = typecastBooleanParam('skip_eggnog')
     def skip_eukulele              = typecastBooleanParam('skip_eukulele')
     def skip_fastqc                = typecastBooleanParam('skip_fastqc')
+    def skip_interproscan          = typecastBooleanParam('skip_interproscan')
     def skip_kofamscan             = typecastBooleanParam('skip_kofamscan')
     def skip_protein_consolidation = typecastBooleanParam('skip_protein_consolidation')
     def skip_qc                    = typecastBooleanParam('skip_qc')
@@ -993,6 +995,15 @@ workflow METATDENOVO {
         DBCAN( ch_protein, ch_fcs_for_summary )
         ch_merge_tables   = ch_merge_tables.mix ( DBCAN.out.sumtable )
         ch_parquet_tables = ch_parquet_tables.mix( DBCAN.out.cazyme_annotation.map { _meta, tsv -> tsv } )
+    }
+
+    //
+    // SUBWORKFLOW: run InterProScan on the ORF-called amino acid sequences
+    //
+    if ( ! skip_interproscan ) {
+        INTERPROSCAN_ANNOTATION( ch_protein, ch_fcs_for_summary )
+        ch_merge_tables   = ch_merge_tables.mix ( INTERPROSCAN_ANNOTATION.out.sumtable )
+        ch_parquet_tables = ch_parquet_tables.mix( INTERPROSCAN_ANNOTATION.out.annotation.map { _meta, tsv -> tsv } )
     }
 
     //
