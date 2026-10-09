@@ -63,6 +63,9 @@
                 "FORMAT_PRODIGAL_GFF": {
                     "gzip": 1.11
                 },
+                "FORMAT_STRIPCDSPREFIX": {
+                    "gzip": 1.11
+                },
                 "PIGZ_PE_READS_FWD": {
                     "pigz": 2.8
                 },
@@ -96,12 +99,6 @@
                 "SPADES": {
                     "spades": "4.1.0"
                 },
-                "TIDYVERSE_STRIPCDSPREFIX": {
-                    "R": "4.5.3",
-                    "dplyr": "1.2.1",
-                    "readr": "2.2.0",
-                    "stringr": "1.6.0"
-                },
                 "TRIMGALORE": {
                     "trimgalore": "2.3.0"
                 },
@@ -109,7 +106,7 @@
                     "pigz": 2.8
                 },
                 "Workflow": {
-                    "nf-core/metatdenovo": "v1.5.0dev"
+                    "nf-core/metatdenovo": "v2.1.0dev"
                 }
             },
             [
@@ -189,11 +186,8 @@
                 "quast/spades/transposed_report.txt",
                 "samtools",
                 "samtools/spades.SAMPLE1_PE.flagstat",
-                "samtools/spades.SAMPLE1_PE.idxstats",
                 "samtools/spades.SAMPLE2_PE.flagstat",
-                "samtools/spades.SAMPLE2_PE.idxstats",
                 "samtools/spades.SAMPLE3_PE_1.flagstat",
-                "samtools/spades.SAMPLE3_PE_1.idxstats",
                 "spades",
                 "spades/spades.assembly.gfa.gz",
                 "spades/spades.spades.log",

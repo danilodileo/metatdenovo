@@ -3,7 +3,7 @@ process FORMAT_EUKULELE_TAX {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-b2ec1fea5791d428eebb8c8ea7409c350d31dada:a447f6b7a6afde38352b24c30ae9cd6e39df95c4-1' :
         'biocontainers/mulled-v2-b2ec1fea5791d428eebb8c8ea7409c350d31dada:a447f6b7a6afde38352b24c30ae9cd6e39df95c4-1' }"
 
@@ -27,7 +27,6 @@ process FORMAT_EUKULELE_TAX {
     library(dplyr)
     library(tidyr)
 
-    # Create and write a table with taxonomy categories in each column
     read_tsv("${taxtable}") %>%
         select(-1) %>%
         rename(orf = transcript_name) %>%

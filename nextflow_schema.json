@@ -55,11 +55,6 @@
             "default": "",
             "fa_icon": "fas fa-check",
             "properties": {
-                "skip_qc": {
-                    "type": "boolean",
-                    "description": "Skip all QC steps except for MultiQC.",
-                    "fa_icon": "fas fa-forward"
-                },
                 "skip_fastqc": {
                     "type": "boolean",
                     "description": "Skip FastQC.",
@@ -271,6 +266,12 @@
                     "fa_icon": "fas fa-download",
                     "default": true
                 },
+                "save_idxstats": {
+                    "type": "boolean",
+                    "description": "Save the per-contig read counts from `samtools idxstats`",
+                    "help_text": "These files have one line per contig, so they get large for fragmented assemblies: 1.8 GB per sample on an assembly of 82 million contigs.",
+                    "fa_icon": "fas fa-download"
+                },
                 "bbmap_minid": {
                     "type": "number",
                     "default": 0.9,
@@ -299,6 +300,15 @@
                     "fa_icon": "fas fa-divide",
                     "description": "Count multi-mapped reads fractionally in featureCounts instead of at full weight per site",
                     "help_text": "Only has an effect on reads with more than one reported alignment, i.e. in practice when `--bbmap_ambiguous all` is used. With the default `false`, a read that maps to N sites contributes a full count to each of the N ORFs it hits; with `true`, it contributes 1/N to each instead, keeping per-sample totals from inflating."
+                },
+                "trim_bam_header_above": {
+                    "type": "integer",
+                    "default": 1073741824,
+                    "minimum": 0,
+                    "fa_icon": "fas fa-cut",
+                    "description": "Header size in bytes above which contigs without reads are removed from a BAM file before featureCounts",
+                    "help_text": "featureCounts cannot read a BAM header larger than 2 GiB, which an assembly of about 75 million contigs produces. Samples whose header, estimated from the size of their idxstats file, exceeds this size get a copy of their BAM file with only the contigs that have reads.",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-percentage"
@@ -396,10 +406,10 @@
                     "fa_icon": "fas fa-phone-volume"
                 },
                 "prokka_batchsize": {
-                    "type": "integer",
+                    "type": ["integer", "string"],
                     "description": "Size of individual files annotated by Prokka in one batch.",
                     "default": "10485760",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*((K|M|G|T)?B)?$",
                     "hidden": true,
                     "help_text": "Prokka usually fails on very large input files. This parameter controls the size of smaller batches for which Prokka will be called. Should be a string in the format integer-unit e.g. `--prokka_batchsize '8.MB'`",
                     "fa_icon": "fas fa-expand-alt"
@@ -427,26 +437,26 @@
                     "description": "Name of the amino-acid reference database to download and build for MetaEuk when `--metaeuk_db` isn't set. Restricted to the amino-acid databases `metaeuk databases -h` lists (its nucleotide/profile entries aren't valid MetaEuk homology references); see the table in usage.md for which of these we've actually confirmed downloadable.",
                     "fa_icon": "fas fa-download"
                 },
-                "metaeuk_db_dir": {
+                "metaeuk_dbpath": {
                     "type": "string",
                     "default": "./metaeuk_db/",
                     "description": "Path to a directory to store the downloaded MetaEuk database in. Will be created if it doesn't exist. Ignored when `--metaeuk_db` is set.",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "metaeuk_batchsize": {
-                    "type": "integer",
+                    "type": ["integer", "string"],
                     "description": "Size of individual files annotated by MetaEuk in one batch.",
                     "default": "104857600",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*((K|M|G|T)?B)?$",
                     "hidden": true,
                     "help_text": "MetaEuk reloads and searches its full reference database on every batch, so very small batches multiply that fixed cost -- unlike Prokka's batching, where each batch is self-contained. This parameter controls the size of the smaller assembly batches MetaEuk is called on, primarily to bound its peak memory use and to limit how much work is lost if a single batch fails. Should be a string in the format integer-unit e.g. `--metaeuk_batchsize '100.MB'`",
                     "fa_icon": "fas fa-expand-alt"
                 },
                 "transdecoder_batchsize": {
-                    "type": "integer",
+                    "type": ["integer", "string"],
                     "description": "Size of individual files annotated by TransDecoder in one batch.",
                     "default": "104857600",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*((K|M|G|T)?B)?$",
                     "hidden": true,
                     "help_text": "TransDecoder.Predict self-trains its coding/noncoding model from the longest ORFs in whatever input it's given, with no way to share one model across batches, so very small batches can train on too few candidates -- unlike Prokka's batching, where each batch is fully independent. This parameter controls the size of the smaller assembly batches TransDecoder is called on, primarily to bound peak memory use and to limit how much work is lost if a single batch fails; set it larger than the whole assembly to recover the exact unbatched, single-model behaviour. Should be a string in the format integer-unit e.g. `--transdecoder_batchsize '100.MB'`",
                     "fa_icon": "fas fa-expand-alt"
@@ -472,16 +482,43 @@
                     "fa_icon": "far fa-file-code",
                     "help_text": "This parameter specifies the location of the EGGNOG database or where it will be created using the --create_eggnog_db parameter. The directory must exist."
                 },
+                "eggnog_db_url": {
+                    "type": "string",
+                    "default": "http://eggnog5.embl.de/download/emapperdb-5.0.2/eggnog.db.gz",
+                    "description": "URL to download the eggNOG annotation database from.",
+                    "fa_icon": "fas fa-link",
+                    "hidden": true
+                },
+                "eggnog_dmnd_url": {
+                    "type": "string",
+                    "default": "http://eggnog5.embl.de/download/emapperdb-5.0.2/eggnog_proteins.dmnd.gz",
+                    "description": "URL to download the eggNOG Diamond database from.",
+                    "fa_icon": "fas fa-link",
+                    "hidden": true
+                },
+                "eggnog_taxa_url": {
+                    "type": "string",
+                    "default": "http://eggnog5.embl.de/download/emapperdb-5.0.2/eggnog.taxa.tar.gz",
+                    "description": "URL to download the eggNOG taxonomy database from.",
+                    "fa_icon": "fas fa-link",
+                    "hidden": true
+                },
                 "skip_kofamscan": {
                     "type": "boolean",
                     "description": "If enabled, skips the run of KofamScan.",
                     "fa_icon": "fas fa-forward"
                 },
-                "kofam_dir": {
+                "kofam_dbpath": {
                     "type": "string",
                     "default": "./kofam/",
                     "description": "Path to a directory with KOfam files. Will be created if it doesn't exist.",
                     "help_text": "If a `ko_list` file and/or `profiles` does not exist, they will be downloaded.",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "kofam_dir": {
+                    "type": "string",
+                    "description": "Deprecated: use `--kofam_dbpath`. If set, its value is used instead of `--kofam_dbpath`.",
+                    "hidden": true,
                     "fa_icon": "fas fa-folder-open"
                 },
                 "kofam_ko_list_url": {

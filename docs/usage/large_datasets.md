@@ -19,7 +19,7 @@ Megahit (the pipeline's default, `--assembler megahit`) is substantially less me
 2. **`--megahit_min_count`** -- a smaller, more surgical adjustment to Megahit's own graph construction; try this if normalization alone doesn't get you far enough, or if you'd rather not touch the input reads at all.
 3. **`--megahit_k_min` / `--megahit_k_max` / `--megahit_k_step`** -- the most aggressive option, since it skips Megahit's most sensitive (and most memory-hungry) low-k iterations entirely. Treat this as a last resort.
 
-See [Usage: Digital normalization](usage.md#digital-normalization) and [Usage: Assembler options](usage.md#assembler-options) for what each param does; this page is just about what values to try.
+See [Usage: Digital normalization](../usage.md#digital-normalization) and [Usage: Assembler options](../usage.md#assembler-options) for what each param does; this page is just about what values to try.
 
 ### 1. Digital normalization
 
@@ -46,9 +46,9 @@ Expect a real trade-off in sensitivity to low-coverage or short reads at these s
 
 A large assembly can run for days, and Megahit steps up through an increasing series of k-mer sizes as it goes -- so a walltime limit, an out-of-memory kill, a spot-instance eviction, or any other hard stop can land partway through, after real progress has already been made.
 
-`-resume` on its own does not help here. Nextflow's resume works at the level of whole tasks: a task is either cached (it previously finished with exit code 0) or it is not, and Nextflow has no visibility into how far a killed task's own process got internally. A killed `MEGAHIT` task is simply not cached, so a plain `-resume` reruns it from scratch -- discarding however many days of progress it had already made, even though nothing downstream needs to be redone.
-
-Megahit itself, independent of Nextflow, keeps its own checkpoint inside its output directory and can pick up from the last one it completed with `megahit --continue`. That's the tool this section uses to recover, before handing the finished assembly back to the pipeline as a user-provided assembly (see [Assembler options](usage.md#assembler-options)).
+`-resume` does not help here: Nextflow caches only tasks that finished, so a killed `MEGAHIT` task reruns from scratch.
+Megahit itself, however, keeps checkpoints in its output directory and can continue from the last one with `megahit --continue`.
+This section uses that, then hands the finished assembly back to the pipeline as a user-provided assembly (see [Assembler options](../usage.md#assembler-options)).
 
 > [!WARNING]
 > Don't run `nextflow clean` on the run, and don't move or delete the work directory, before completing the recovery below.
@@ -118,4 +118,27 @@ nextflow run nf-core/metatdenovo -profile docker --outdir results/ --input sampl
     --user_assembly_name megahit_assembly
 ```
 
-This is a fresh run, not a Nextflow-level `-resume` of the original session -- and that's deliberate. It's possible in principle to hand-place a `.exitcode` and the expected output files into the original task's work directory and `-resume` the same session, but that relies on Nextflow's cache bookkeeping matching by hand, and a small mistake there is easy to get wrong and hard to notice until much later. `--user_assembly` is the pipeline's own tested entry point for supplying a pre-built assembly, and it skips reads-to-assembly steps (`SEQTK_MERGEPE`, digital normalization, the assembler itself) automatically, so nothing upstream of the assembly is redone.
+This is a fresh run, not a `-resume` of the original session.
+`--user_assembly` skips the reads-to-assembly steps (read merging, digital normalization, the assembler itself), so nothing upstream of the assembly is redone.
+
+## Protein consolidation on very large assemblies
+
+Protein consolidation runs by default, and its first step, `FORMAT_LOCUSFAA`, holds every called protein sequence in memory on a single CPU.
+On an assembly of 82 million contigs with three ORF sources it needed 126 GB and close to four days.
+The default allowance is 36 GB and 8 hours, doubled on one retry, so a run of that size fails at this step.
+
+Give it, and `MMSEQS_CREATETSV` later in the clustering, more resources in a config file passed with `-c`:
+
+```groovy
+process {
+    withName: 'FORMAT_LOCUSFAA' {
+        memory = 160.GB
+        time   = 5.d
+    }
+    withName: '.*:MMSEQS_FASTA_CLUSTER:MMSEQS_CREATETSV' {
+        memory = 24.GB
+    }
+}
+```
+
+Or turn the step off with `--skip_protein_consolidation`; see [Protein consolidation](../usage.md#consolidating-calls-for-the-same-gene) for what that costs.

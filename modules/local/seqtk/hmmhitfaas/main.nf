@@ -3,7 +3,7 @@ process SEQTK_HMMHITFAAS {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/seqtk:1.4--h577a1d6_3':
         'biocontainers/seqtk:1.4--h577a1d6_3' }"
 
@@ -22,7 +22,6 @@ process SEQTK_HMMHITFAAS {
     """
     mkdir hits/
 
-    # Loop over all unique profiles found in hmmrank, and call seqtk subseq for all orfs matching that profile
     for profile in \$(gunzip -c $hmmrank | grep -v '^profile' | cut -f 1 | sort -u); do
         seqtk subseq $faa <(gunzip -c $hmmrank | grep "^\${profile}" | cut -f 2) | gzip -c > hits/${prefix}.\${profile}.faa.gz
     done

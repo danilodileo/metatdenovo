@@ -3,15 +3,14 @@ process KOFAMSCAN_DOWNLOAD {
     label 'process_long'
 
     conda "${moduleDir}/environment.yml"
-    // storeDir can point at an s3:// path; Nextflow's AWS Batch executor stages that copy by
-    // shelling out to `aws` inside the task's own container, which the plain wget image lacks.
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/wget_awscli:340260e7e9dd32f7':
-        'community.wave.seqera.io/library/wget_awscli:9510e6a6af2abe94' }"
+    // An s3:// storeDir is staged by aws inside this container, which the wget image lacks.
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/bc/bceb5c307eb199ae3eca0eecfd71a0a4a918ce90e6fd96ecc749603426337823/data' :
+        'community.wave.seqera.io/library/wget_awscli_gzip_tar:1fad694ee6322b7d' }"
 
     input:
-    val ko_list_url
-    val profiles_url
+    path ko_list_gz
+    path profiles_targz
 
     output:
     path "ko_list"     , emit: ko_list
@@ -23,11 +22,9 @@ process KOFAMSCAN_DOWNLOAD {
     script:
 
     """
-    wget ${ko_list_url} -O ko_list.gz
-    gunzip ko_list.gz
+    gunzip -c ${ko_list_gz} > ko_list
 
-    wget ${profiles_url} -O profiles.tar.gz
-    tar -zxf profiles.tar.gz
+    tar -zxf ${profiles_targz}
     """
 
     stub:

@@ -3,7 +3,7 @@ process FORMAT_METAEUK_GFF {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gzip:1.11':
         'biocontainers/gzip:1.11' }"
 
@@ -21,11 +21,7 @@ process FORMAT_METAEUK_GFF {
     prefix    = task.ext.prefix ?: "${meta.id}"
     cat_input = gff =~ /\.gz$/ ? "gunzip -c ${gff}" : "cat ${gff}"
 
-    // A CDS record with no TCS_ID= attribute must fail rather than silently emit an empty-string
-    // id ("ID=;") -- that would still parse as a match downstream (FORMAT_GFF2BED's own ID=
-    // extraction), merging unrelated loci into one instead of losing this one record loudly.
-    // FORMAT_GFF2BED (modules/local/format/gff2bed/main.nf) guards its own match() the same way --
-    // keep both in sync if this guard's contract ever changes.
+    // A CDS without TCS_ID= must fail: an empty id merges unrelated loci (same guard as FORMAT_GFF2BED).
     """
     $cat_input \\
         | awk 'BEGIN{FS=OFS="\\t"}

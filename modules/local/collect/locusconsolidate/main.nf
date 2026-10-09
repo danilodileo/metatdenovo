@@ -30,10 +30,7 @@ process COLLECT_LOCUSCONSOLIDATE {
 
     setDTthreads($task.cpus)
 
-    # Dedupe on ID, not on whole rows: FORMAT_LOCUSCONSOLIDATE now emits one row per locus, but a
-    # duplicate ID differing in any column would survive a plain distinct() and fan this join out --
-    # and here that duplicates the counts rows themselves, so anything summing the table would
-    # double-count.
+    # Dedupe on ID, not whole rows: a duplicate ID would fan the join out and double-count.
     provenance <- fread(cmd = "zcat '${provenance}'", sep = '\\t') %>% distinct(ID, .keep_all = TRUE)
 
     tibble(f = Sys.glob('*.featureCounts.tsv')) %>%
@@ -46,7 +43,7 @@ process COLLECT_LOCUSCONSOLIDATE {
                         lazy_dt() %>%
                         filter(count > 0) %>%
                         mutate(
-                            sample = str_remove(sample, '.sorted.bam'),
+                            sample = str_remove(sample, '[.]sorted[.]bam\$'),
                             r = count/Length
                         ) %>%
                         rename(orf = Geneid, chr = Chr, start = Start, end = End, strand = Strand, length = Length) %>%
@@ -58,10 +55,9 @@ process COLLECT_LOCUSCONSOLIDATE {
             )
         ) %>%
         tidyr::unnest(d) %>%
-        # Transdecoder appends "cds." to ORF IDs in the gff file, but does not in the fasta file. Remove to make compatible between tables.
+        # TransDecoder prefixes gff ORF IDs with "cds.", but not fasta ones.
         mutate(orf = str_remove(orf, '^cds\\\\.')) %>%
         select(-f) %>%
-        # Per-locus provenance: which caller(s) contributed and how many independent calls were merged.
         left_join(provenance, by = c('orf' = 'ID')) %>%
         write_tsv("${prefix}.counts.tsv.gz")
 

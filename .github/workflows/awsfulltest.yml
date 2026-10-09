@@ -33,6 +33,11 @@ jobs:
           nextflow_config: |
             plugins {
               id 'nf-slack@0.5.0'
+              id 'nf-schema@2.7.2'
+            }
+            // Fusion snapshot signals broke steps reading through pipes (BBMap, Prokka)
+            fusion {
+              snapshots = false
             }
             slack {
               enabled = true
