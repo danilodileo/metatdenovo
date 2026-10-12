@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## v2.1.0dev - [YYYY-mm-dd]
 
 ### `Added`
-
-- Add InterProScan functional annotation (Pfam/PANTHER domain and GO annotation by default, `--interproscan_applications` to widen it), run by default alongside EggNOG/KofamScan/dbCAN and skippable with `--skip_interproscan`. Uses the nf-core/modules `interproscan` component, pinned to InterProScan 5.59-91.0 (the version its container ships); input protein sequences have their `*` stop-codon markers stripped first, since InterProScan hard-rejects them. Covered by a real (non-stub) `test_interproscan` profile, using the tiny SFLD/HAMAP/TIGRFAM test database already shared with the vendored module's own tests, addresses [#413](https://github.com/nf-core/metatdenovo/issues/413) (@danilodileo)
+- [#593](https://github.com/nf-core/metatdenovo/pull/593) - Add InterProScan functional annotation (Pfam/PANTHER domain and GO annotation by default, `--interproscan_applications` to widen it), run by default alongside EggNOG/KofamScan/dbCAN and skippable with `--skip_interproscan`. Uses the nf-core/modules `interproscan` component, pinned to InterProScan 5.59-91.0 (the version its container ships); input protein sequences have their `*` stop-codon markers stripped first, since InterProScan hard-rejects them. Covered by a real (non-stub) `test_interproscan` profile, using the tiny SFLD/HAMAP/TIGRFAM test database already shared with the vendored module's own tests, addresses [#413](https://github.com/nf-core/metatdenovo/issues/413) (@danilodileo)
+- [#589](https://github.com/nf-core/metatdenovo/pull/589) - KofamScan runs on batches of proteins, in parallel and resumable per batch (`--kofamscan_batchsize`) (@erikrikarddaniel)
 
 ### `Changed`
 
